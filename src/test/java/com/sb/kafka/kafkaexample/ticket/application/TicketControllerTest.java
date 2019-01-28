@@ -28,10 +28,19 @@ public class TicketControllerTest {
         this.webTestClient.post()
                 .uri("/ticket/")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(new TicketDTO("Title1", "Content1")), TicketDTO.class)
                 .exchange()
                 .expectStatus().isOk();
     }
 
+    @Test
+    public void getTicket_shouldReturnStatus200() {
+        this.webTestClient.get()
+                .uri("/ticket/")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk();
+    }
 
     @Test
     public void getTicket_shouldReturnTicket() throws InterruptedException {

@@ -10,6 +10,11 @@
 .springBeans
 .sts4-cache
 
+### MVN ###
+.mvn
+mvnw
+mvnw.cmd
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
