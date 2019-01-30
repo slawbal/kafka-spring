@@ -32,7 +32,7 @@ public class TicketPipeTest {
     public void senderShouldPushEventToTopic() throws InterruptedException {
         sender.send(new TicketKTO("Topic title", "Topic content"));
 
-        Thread.sleep(100);
+        Thread.sleep(500);
 
         assertThat(systemUnderTest.getTickets())
                 .contains(new Ticket("Topic title", "Topic content"));
