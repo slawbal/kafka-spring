@@ -11,11 +11,10 @@ public class TicketPipe {
 
     private List<Ticket> tickets = new ArrayList<>();
 
+
     @KafkaListener(topics = "ticket.pipe")
     public void addTicket(final TicketKTO ticket) {
-        System.out.println("RECIEVING");
-        System.out.println(ticket.getTitle());
-        tickets.add(new Ticket(ticket.getTitle(),ticket.getContent()));
+        tickets.add(new Ticket(ticket.getTitle(), ticket.getContent()));
     }
 
     public List<Ticket> getTickets() {

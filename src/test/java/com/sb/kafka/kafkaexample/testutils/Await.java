@@ -1,4 +1,4 @@
-package com.sb.kafka.kafkaexample;
+package com.sb.kafka.kafkaexample.testutils;
 
 import java.time.Duration;
 import java.util.Collection;

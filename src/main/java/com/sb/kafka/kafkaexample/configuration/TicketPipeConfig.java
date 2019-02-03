@@ -1,6 +1,7 @@
 package com.sb.kafka.kafkaexample.configuration;
 
 import com.sb.kafka.kafkaexample.pipe.application.TicketPipe;
+import com.sb.kafka.kafkaexample.ticket.domain.TicketKTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,13 +43,13 @@ public class TicketPipeConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
+    public ConsumerFactory<String, TicketKTO> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs());
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, TicketKTO>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TicketKTO> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
 

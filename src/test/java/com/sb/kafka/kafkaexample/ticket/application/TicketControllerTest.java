@@ -13,6 +13,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
+import static com.sb.kafka.kafkaexample.testutils.Await.awaitFor;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext
@@ -25,40 +29,39 @@ public class TicketControllerTest {
 
     @Test
     public void newTicket_shouldCreateNewTicket() {
-        this.webTestClient.post()
-                .uri("/ticket/")
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(new TicketDTO("Title1", "Content1")), TicketDTO.class)
-                .exchange()
-                .expectStatus().isOk();
+        createTicket(new TicketDTO("Title1", "Content1"));
     }
 
     @Test
     public void getTicket_shouldReturnStatus200() {
-        this.webTestClient.get()
-                .uri("/ticket/")
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .exchange()
+        getTicket()
                 .expectStatus().isOk();
     }
 
     @Test
     public void getTicket_shouldReturnTicket() throws InterruptedException {
+        createTicket(new TicketDTO("Title1", "Content1"));
+
+        awaitFor(()-> getTicket(), Duration.ofMillis(100))
+                .forEach((e) -> e
+                .expectBody(TicketDTO.class)
+                .isEqualTo(new TicketDTO("Title1", "Content1")));
+    }
+
+    private WebTestClient.ResponseSpec getTicket() {
+        return this.webTestClient.get()
+                .uri("/ticket/")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange();
+    }
+
+    private void createTicket(TicketDTO ticketDTO) {
         this.webTestClient.post()
                 .uri("/ticket/")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(new TicketDTO("Title1", "Content1")), TicketDTO.class)
+                .body(Mono.just(ticketDTO), TicketDTO.class)
                 .exchange()
                 .expectStatus().isOk();
-
-        Thread.sleep(100);
-
-        this.webTestClient.get()
-                .uri("/ticket/")
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .exchange()
-                .expectBody(TicketDTO.class)
-                .isEqualTo(new TicketDTO("Title1", "Content1"));
     }
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
